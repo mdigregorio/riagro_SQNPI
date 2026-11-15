@@ -19,6 +19,7 @@ const fileRoles = {
   colture: /^(colture|colture-agricole-certificate-sqnpi)\.(json|csv)$/i,
   elenco: /^(elenco|codici|cf_piva)\.csv$/i,
 };
+const requiredRoles = ['aziende', 'colture'];
 
 function validDate(value) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
@@ -57,7 +58,7 @@ export function discoverSnapshots(files) {
 
   const snapshotsByDate = new Map();
   for (const [directory, { date, duplicates, ...filesForDate }] of directories) {
-    const missing = Object.keys(fileRoles).filter(role => !filesForDate[role]);
+    const missing = requiredRoles.filter(role => !filesForDate[role]);
     if (duplicates.size) warnings.push(`${directory} · più file per ${[...duplicates].join(', ')}`);
     if (missing.length) warnings.push(`${directory} · mancano ${missing.join(', ')}`);
     if (missing.length || duplicates.size) continue;

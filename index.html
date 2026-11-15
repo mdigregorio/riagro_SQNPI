@@ -75,7 +75,7 @@
           <div class="welcome-content">
             <div class="folder-symbol" aria-hidden="true"><span></span></div>
             <h2 id="welcome-title">Apri l’archivio dati</h2>
-            <p>Scegli la cartella che contiene gli aggiornamenti datati, ognuno con gli export <strong>Aziende</strong> e <strong>Colture</strong> e il CSV dei codici da cercare.</p>
+            <p>Scegli la cartella con gli aggiornamenti datati, ognuno con gli export <strong>Aziende</strong> e <strong>Colture</strong>. Aggiungi <code>elenco.csv</code> con i codici da cercare oppure apri tutti i record dell’export Aziende.</p>
             <label class="button button--primary open-folder" for="folder-input">Scegli cartella</label>
             <p class="welcome-note">I file vengono elaborati sul tuo computer.</p>
           </div>
@@ -86,7 +86,7 @@
             <ul class="tree-files">
               <li><code>aziende.json</code></li>
               <li><code>colture.json</code></li>
-              <li><code>elenco.csv</code></li>
+              <li><code>elenco.csv</code> <small>(facoltativo)</small></li>
             </ul>
           </div>
         </section>
@@ -102,13 +102,14 @@
               </li>
               <li>Attendi i risultati e usa <strong>Download Results</strong>. Salva i due export come <code>aziende.json</code> e <code>colture.json</code>, oppure come <code>aziende.csv</code> e <code>colture.csv</code> se scarichi il formato CSV.</li>
             </ol>
-            <h2>Prepara elenco.csv</h2>
+            <h2>Prepara elenco.csv (facoltativo)</h2>
+            <p>Il sito mostra tutte le aziende se il file manca, è vuoto oppure contiene solo l’intestazione.</p>
             <p>Usa una colonna con intestazione <code>CF/P.IVA</code> e un identificativo per riga. In Excel imposta la colonna come <strong>Testo</strong> prima di incollare i codici, così mantieni gli zeri iniziali. Salva come <strong>CSV UTF-8</strong> con nome <code>elenco.csv</code>.</p>
             <p>Esempio con codici fittizi:</p>
             <pre><code>CF/P.IVA
 01234567890
 02345678901</code></pre>
-            <p>Metti tutti e tre i file nella stessa sottocartella, usando la data di scaricamento nel formato <code>AAAA-MM-GG</code>. Torna qui e seleziona la cartella principale con <strong>Scegli cartella</strong>.</p>
+            <p>Metti i due export e l’eventuale elenco nella stessa sottocartella, usando la data di scaricamento nel formato <code>AAAA-MM-GG</code>. Torna qui e seleziona la cartella principale con <strong>Scegli cartella</strong>.</p>
           </div>
         </details>
 

@@ -152,14 +152,17 @@ function displaySnapshot(snapshot) {
   snapshotSelect.value = snapshot.date;
   byId('snapshot-date').textContent = formatDate(snapshot.date);
   const { aziende, colture } = snapshot.stats;
+  const hasRoster = snapshot.ids.length > 0;
   const campaigns = source => source.years.length ? source.years.join(', ') : 'nessuna annata';
   const olives = new Set(snapshot.companies.filter(row => row.olivo === 1).map(row => row.cf_pi));
   const vines = new Set(snapshot.companies.filter(row => row.vite === 1).map(row => row.cf_pi));
   byId('summary').replaceChildren(
     stat('Aziende nell’export', aziende.identifiers, `${number.format(aziende.records)} record · ${campaigns(aziende)}`),
     stat('Colture nell’export', colture.records, `${number.format(colture.identifiers)} CF / P. IVA · ${campaigns(colture)}`),
-    stat('Codici nell’elenco', snapshot.ids.length, `${number.format(snapshot.ids.length - snapshot.missing.length)} presenti · ${number.format(snapshot.missing.length)} assenti`),
-    stat('Con olivo o vite', new Set([...olives, ...vines]).size, `Nell’elenco · ${number.format(olives.size)} olivo · ${number.format(vines.size)} vite`),
+    hasRoster
+      ? stat('Codici nell’elenco', snapshot.ids.length, `${number.format(snapshot.ids.length - snapshot.missing.length)} presenti · ${number.format(snapshot.missing.length)} assenti`)
+      : stat('Record consultabili', snapshot.companies.length, 'Tutte le aziende dell’export'),
+    stat('Con olivo o vite', new Set([...olives, ...vines]).size, `${hasRoster ? 'Nell’elenco · ' : ''}${number.format(olives.size)} olivo · ${number.format(vines.size)} vite`),
   );
   options(filters.year, uniqueField(snapshot.companies, 'anno_campagna', true));
   options(filters.scope, uniqueField(snapshot.companies, 'scopo'));
@@ -262,7 +265,7 @@ folderInput.addEventListener('change', () => {
   folderInput.value = '';
   setWarnings(discovered.warnings);
   if (discovered.snapshots.length === 0) {
-    setStatus('Nessuna cartella con data valida e tutti e tre i file. Controlla nomi e struttura indicati nella guida.', 'error');
+    setStatus('Nessuna cartella con data valida e i due export Aziende e Colture. Controlla nomi e struttura indicati nella guida.', 'error');
     return;
   }
   snapshots = discovered.snapshots;

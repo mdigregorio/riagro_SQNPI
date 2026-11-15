@@ -349,12 +349,13 @@ async function withFileContext(file, action) {
 }
 
 export async function importSnapshot({ date, aziende, colture, elenco }, onProgress = () => {}) {
-  const ids = await withFileContext(elenco, () => readIds(elenco, onProgress));
+  const ids = elenco ? await withFileContext(elenco, () => readIds(elenco, onProgress)) : new Set();
+  const filterByIds = ids.size > 0;
   const cropsByCompanyAndYear = new Map();
   const cropStats = await withFileContext(colture, async () => {
     const cropRecords = await loadDataset(colture, 'colture', onProgress);
     return survey(cropRecords, (record, id, year) => {
-      if (!id || !year || !ids.has(id)) return;
+      if (!id || !year || (filterByIds && !ids.has(id))) return;
       const types = productTypes(record);
       if (!types) return;
       const key = joinKey(id, year);
@@ -373,9 +374,9 @@ export async function importSnapshot({ date, aziende, colture, elenco }, onProgr
   const companyStats = await withFileContext(aziende, async () => {
     const companyRecords = await loadDataset(aziende, 'aziende', onProgress);
     return survey(companyRecords, (record, id, year) => {
-      if (!id || !ids.has(id)) return;
-      present.add(id);
-      const indicators = year ? cropsByCompanyAndYear.get(joinKey(id, year)) : undefined;
+      if (filterByIds && !ids.has(id)) return;
+      if (filterByIds) present.add(id);
+      const indicators = id && year ? cropsByCompanyAndYear.get(joinKey(id, year)) : undefined;
       const row = Object.fromEntries(companyFields.map((key) => [key, cleanValues(record[key]).join(' · ')]));
       companies.push({
         ...row,
