@@ -7,6 +7,24 @@
   <title>Aziende certificate SQNPI | RiAGRO</title>
   <link rel="icon" href="data:,">
   <link rel="stylesheet" href="./styles.css">
+  <style>
+    .download-guide { margin: 1rem 0; }
+    .download-guide-body { padding: .15rem 1rem 1rem; border-top: 1px solid var(--line-soft); }
+    .download-guide-body h2 { margin: .9rem 0 .35rem; font-size: 1rem; }
+    .download-guide-body p { margin: .45rem 0; }
+    .download-guide-body ol { margin: .45rem 0; padding-inline-start: 1.3rem; }
+    .download-guide-body li + li { margin-top: .4rem; }
+    .download-guide-body a { color: #245743; }
+    .download-guide-body pre {
+      margin: .55rem 0;
+      padding: .6rem .75rem;
+      border-radius: .25rem;
+      background: var(--flag-neutral);
+      font: .82rem/1.55 var(--code);
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+  </style>
   <script type="module" src="./js/app.mjs"></script>
 </head>
 <body>
@@ -72,6 +90,27 @@
             </ul>
           </div>
         </section>
+
+        <details class="missing download-guide" id="mini-guida">
+          <summary><span>Mini-guida · Scaricare i dati SIAN e preparare il CSV</span></summary>
+          <div class="download-guide-body">
+            <h2>Scarica Aziende e Colture dal SIAN</h2>
+            <ol>
+              <li>Apri gli editor SPARQL di <a href="https://dati.sian.it/sparql?dataset=aziende-con-certificazione-sqnpi" target="_blank" rel="noopener noreferrer">Aziende certificate</a> e <a href="https://dati.sian.it/sparql?dataset=colture-agricole-certificate-sqnpi" target="_blank" rel="noopener noreferrer">Colture certificate</a>.</li>
+              <li>Sostituisci la query nell’editor con questa, senza <code>LIMIT</code>, e fai clic su <strong>Run query</strong> in ciascun editor.
+                <pre><code>SELECT ?s ?p ?o WHERE { ?s ?p ?o . }</code></pre>
+              </li>
+              <li>Attendi i risultati e usa <strong>Download Results</strong>. Salva i due export come <code>aziende.json</code> e <code>colture.json</code>, oppure come <code>aziende.csv</code> e <code>colture.csv</code> se scarichi il formato CSV.</li>
+            </ol>
+            <h2>Prepara elenco.csv</h2>
+            <p>Usa una colonna con intestazione <code>CF/P.IVA</code> e un identificativo per riga. In Excel imposta la colonna come <strong>Testo</strong> prima di incollare i codici, così mantieni gli zeri iniziali. Salva come <strong>CSV UTF-8</strong> con nome <code>elenco.csv</code>.</p>
+            <p>Esempio con codici fittizi:</p>
+            <pre><code>CF/P.IVA
+01234567890
+02345678901</code></pre>
+            <p>Metti tutti e tre i file nella stessa sottocartella, usando la data di scaricamento nel formato <code>AAAA-MM-GG</code>. Torna qui e seleziona la cartella principale con <strong>Scegli cartella</strong>.</p>
+          </div>
+        </details>
 
         <div id="dashboard" hidden>
           <section class="summary-section" aria-labelledby="summary-title">
