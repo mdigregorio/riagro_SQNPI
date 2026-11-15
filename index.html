@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Consulta gli export SIAN delle aziende certificate SQNPI e verifica la presenza di colture a olivo e vite.">
+  <title>Aziende certificate SQNPI | RiAGRO</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./js/app.mjs"></script>
+</head>
+<body>
+  <header class="masthead">
+    <div class="masthead-inner">
+      <div class="brand" aria-label="RiAGRO">
+        <span class="brand-symbol" aria-hidden="true"></span>
+        <span>RiAGRO</span>
+      </div>
+      <span class="masthead-caption">Produzione integrata</span>
+    </div>
+  </header>
+
+  <main class="shell">
+    <header class="page-heading">
+      <h1>Aziende certificate SQNPI</h1>
+      <p>Consulta gli export SIAN e verifica per annata la presenza di colture certificate a olivo e vite.</p>
+    </header>
+
+    <div class="workspace">
+      <aside class="sidebar" aria-label="Dati e criteri di lettura">
+        <div class="sidebar-section">
+          <h2>Archivio</h2>
+          <label class="control-label" for="snapshot-select">Data di aggiornamento</label>
+          <select id="snapshot-select" disabled>
+            <option value="">Scegli la cartella dati</option>
+          </select>
+          <input id="folder-input" class="visually-hidden" type="file" webkitdirectory multiple aria-label="Apri la cartella dati">
+          <label id="folder-reopen" class="button button--secondary folder-reopen" for="folder-input" hidden>Cambia cartella</label>
+          <p class="sidebar-note">La data dell’export è distinta dall’annata di campagna.</p>
+        </div>
+
+        <div class="sidebar-section legend">
+          <h2>Olivo e vite</h2>
+          <ul>
+            <li><span class="flag flag--yes">1</span><span>Coltura presente</span></li>
+            <li><span class="flag flag--no">0</span><span>Altre colture presenti</span></li>
+            <li><span class="flag flag--np">NP</span><span>Coltura non indicata</span></li>
+          </ul>
+          <p class="sidebar-note">Il confronto usa lo stesso CF/P.IVA e la stessa annata.</p>
+        </div>
+      </aside>
+
+      <div class="content">
+        <div id="status" class="status" role="status" aria-live="polite" hidden></div>
+        <p id="file-warnings" class="status status--warning" role="status" aria-live="polite" hidden></p>
+        <section id="welcome" class="welcome" aria-labelledby="welcome-title">
+          <div class="welcome-content">
+            <div class="folder-symbol" aria-hidden="true"><span></span></div>
+            <h2 id="welcome-title">Apri l’archivio dati</h2>
+            <p>Scegli la cartella che contiene gli aggiornamenti datati, ognuno con gli export <strong>Aziende</strong> e <strong>Colture</strong> e il CSV dei codici da cercare.</p>
+            <label class="button button--primary open-folder" for="folder-input">Scegli cartella</label>
+            <p class="welcome-note">I file vengono elaborati sul tuo computer.</p>
+          </div>
+          <div class="folder-example" aria-label="Struttura delle cartelle">
+            <div class="example-title">Struttura delle cartelle</div>
+            <p><span class="tree-folder" aria-hidden="true"></span><code>archivio/</code></p>
+            <p class="tree-level-1"><span class="tree-folder" aria-hidden="true"></span><code>2026-11-15/</code></p>
+            <ul class="tree-files">
+              <li><code>aziende.json</code></li>
+              <li><code>colture.json</code></li>
+              <li><code>elenco.csv</code></li>
+            </ul>
+          </div>
+        </section>
+
+        <div id="dashboard" hidden>
+          <section class="summary-section" aria-labelledby="summary-title">
+            <div class="section-header">
+              <h2 id="summary-title">Riepilogo</h2>
+              <p id="snapshot-date" class="snapshot-date"></p>
+            </div>
+            <div id="summary" class="summary-grid"></div>
+          </section>
+
+          <section class="results" aria-labelledby="results-title">
+            <div class="results-heading">
+              <div>
+                <h2 id="results-title">Risultati</h2>
+                <p id="result-count" class="result-count" aria-live="polite"></p>
+              </div>
+              <button id="export-csv" class="button button--primary" type="button">
+                <span class="download-icon" aria-hidden="true"></span>
+                Scarica CSV
+              </button>
+            </div>
+            <form id="search-form" class="filters">
+              <div class="filter filter--wide">
+                <label for="filter-text">Azienda</label>
+                <input id="filter-text" type="search" autocapitalize="off" spellcheck="false" placeholder="CF/P.IVA o ragione sociale">
+              </div>
+              <div class="filter">
+                <label for="filter-year">Annata</label>
+                <select id="filter-year"><option value="">Tutte</option></select>
+              </div>
+              <div class="filter filter--wide">
+                <label for="filter-scope">Scopo</label>
+                <select id="filter-scope"><option value="">Tutti</option></select>
+              </div>
+              <div class="filter filter--wide">
+                <label for="filter-activity">Tipo di adesione</label>
+                <select id="filter-activity"><option value="">Tutti</option></select>
+              </div>
+              <div class="filter">
+                <label for="filter-olive">Olivo</label>
+                <select id="filter-olive">
+                  <option value="">Tutti</option>
+                  <option value="1">1 · Presente</option>
+                  <option value="0">0 · Assente</option>
+                  <option value="NP">NP · Non indicato</option>
+                </select>
+              </div>
+              <div class="filter">
+                <label for="filter-vine">Vite</label>
+                <select id="filter-vine">
+                  <option value="">Tutti</option>
+                  <option value="1">1 · Presente</option>
+                  <option value="0">0 · Assente</option>
+                  <option value="NP">NP · Non indicato</option>
+                </select>
+              </div>
+              <button id="reset-filters" class="button button--text" type="button">Azzera filtri</button>
+            </form>
+            <div id="table-wrap" class="table-wrap" tabindex="0" aria-label="Tabella delle aziende certificate">
+              <table>
+                <caption class="visually-hidden">Aziende certificate SQNPI e presenza di olivo e vite</caption>
+                <thead id="table-head"></thead>
+                <tbody id="table-body"></tbody>
+              </table>
+            </div>
+            <p id="table-empty" class="table-empty" hidden>Nessuna azienda corrisponde ai filtri selezionati.</p>
+            <div class="pagination" aria-label="Paginazione dei risultati">
+              <span id="pagination-label"></span>
+              <div class="pagination-controls">
+                <button id="page-prev" class="button button--secondary button--compact" type="button" disabled>Precedente</button>
+                <button id="page-next" class="button button--secondary button--compact" type="button" disabled>Successiva</button>
+              </div>
+            </div>
+          </section>
+
+          <details id="missing-identifiers" class="missing">
+            <summary><span>Identificativi assenti dall’export Aziende</span><span id="missing-count" class="missing-count"></span></summary>
+            <ul id="missing-list"></ul>
+          </details>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <noscript><p class="noscript">Attiva JavaScript per aprire l’archivio e consultare i risultati.</p></noscript>
+</body>
+</html>
